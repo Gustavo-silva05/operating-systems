@@ -1,9 +1,11 @@
 using namespace std;
 #include "buddy.hpp"
 #include "worst-fit.hpp"
+#include <limits>
 #include "circular-fit.hpp"
+#include "parser.hpp"
 
-int safe_input_int(const string& prompt)
+int safe_input_int(const string &prompt)
 {
     int value;
     while (true)
@@ -11,10 +13,10 @@ int safe_input_int(const string& prompt)
         cout << prompt;
         cin >> value;
 
-        if (cin.fail()) 
+        if (cin.fail())
         {
             cin.clear(); // limpa o estado de erro
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Entrada inválida. Digite um número inteiro.\n";
         }
         else
@@ -25,8 +27,8 @@ int safe_input_int(const string& prompt)
     }
 }
 
-
-bool check_number(int target, int main_size){
+bool check_number(int target, int main_size)
+{
     return (target > 0 && target <= main_size);
 }
 int menu()
@@ -56,15 +58,83 @@ int menu_buddy(string alocType)
 int main()
 {
     int c, main_size;
+    string mode;
 
     cout << "Welcome to the Application!" << endl;
-    cout << "Main memory size (Bytes): ";
-    cin >> main_size;
+
+    cout << "Do you want to insert a file or use the interface? (file/interface): ";
+    cin >> mode;
+
+    if (mode == "file")
+    {
+        string filename;
+        cout << "File name .txt: ";
+        cin >> filename;
+
+        main_size = safe_input_int("Main memory size (Bytes): ");
+        while (!check_pow_of_2(main_size))
+        {
+            cout << "Error: Memory size must be a power of 2." << endl;
+            main_size = safe_input_int("Main memory size (Bytes): ");
+        }
+
+        c = menu();
+
+        auto ops = parseArquivoOperacoes(filename);
+
+        switch (c)
+        {
+        case 1:
+        {
+            buddy b(main_size);
+            for (const auto &op : ops)
+            {
+                if (op.tipo == "IN")
+                    b.in(op.id, op.tamanho);
+                else
+                    b.out(op.id);
+                b.str();
+            }
+            break;
+        }
+        case 2:
+        {
+            WorstFit b(main_size);
+            for (const auto &op : ops)
+            {
+                if (op.tipo == "IN")
+                    b.addMemory(op.id, op.tamanho);
+                else
+                    b.removeMemory(op.id);
+                b.printMemory();
+            }
+            break;
+        }
+        case 3:
+        {
+            CircularFit b(main_size);
+            for (const auto &op : ops)
+            {
+                if (op.tipo == "IN")
+                    b.addMemory(op.id, op.tamanho);
+                else
+                    b.removeMemory(op.id);
+                b.printMemory();
+            }
+            break;
+        }
+        default:
+            cout << "Invalid policy!" << endl;
+        }
+
+        cout << "Closing the program, bye!" << endl;
+        return 0;
+    }
+    main_size = safe_input_int("Main memory size (Bytes): ");
     while (!check_pow_of_2(main_size))
     {
         cout << "Error: Memory size must be a power of 2." << endl;
-        cout << "Main memory size (Bytes): ";
-        cin >> main_size;
+        main_size = safe_input_int("Main memory size (Bytes): ");
     }
     c = menu();
     while (c != 4)
@@ -85,7 +155,8 @@ int main()
 
                     string process_name;
                     int size = safe_input_int("Enter size to allocate (Bytes): ");
-                    while (!check_number(size, main_size)){
+                    while (!check_number(size, main_size))
+                    {
                         cout << "Invalid size. Try again." << endl;
                         size = safe_input_int("Enter size to allocate (Bytes): ");
                     }
@@ -129,19 +200,21 @@ int main()
                 {
                 case 1:
                 {
-
+                    string process_name;
                     int size = safe_input_int("Enter size to allocate (Bytes): ");
-                    while (!check_number(size, main_size)){
+                    while (!check_number(size, main_size))
+                    {
                         cout << "Invalid size. Try again." << endl;
                         size = safe_input_int("Enter size to allocate (Bytes): ");
                     }
-                    int process_name = safe_input_int("Enter process name: ");
+                    cout << "Enter process name: ";
+                    cin >> process_name;
                     b.addMemory(process_name, size);
                     break;
                 }
                 case 2:
                 {
-                    int process_name;
+                    string process_name;
                     cout << "Enter process to deallocate: ";
                     cin >> process_name;
                     b.removeMemory(process_name);
@@ -174,19 +247,21 @@ int main()
                 {
                 case 1:
                 {
-
+                    string process_name;
                     int size = safe_input_int("Enter size to allocate (Bytes): ");
-                    while (!check_number(size, main_size)){
+                    while (!check_number(size, main_size))
+                    {
                         cout << "Invalid size. Try again." << endl;
                         size = safe_input_int("Enter size to allocate (Bytes): ");
                     }
-                    int process_name = safe_input_int("Enter process name: ");
+                    cout << "Enter process name: ";
+                    cin >> process_name;
                     b.addMemory(process_name, size);
                     break;
                 }
                 case 2:
                 {
-                    int process_name;
+                    string process_name;
                     cout << "Enter process to deallocate: ";
                     cin >> process_name;
                     b.removeMemory(process_name);

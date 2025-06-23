@@ -1,22 +1,34 @@
 #include <iostream>
 #include <vector>
+#include <map>
 using namespace std;
+
 class CircularFit {
 private:
     vector<int> memory;
     int pointer = 0;
+    int nextId = 1;
+    map<string, int> nameToId;
+    map<int, string> idToName;
+
+    int getId(string name) {
+        if (nameToId.count(name)) return nameToId[name];
+        nameToId[name] = nextId;
+        idToName[nextId] = name;
+        return nextId++;
+    }
 
 public:
     CircularFit(int size) {
         memory = vector<int>(size, 0);
     }
 
-    void addMemory(int id, int size) {
+    void addMemory(string name, int size) {
+        int id = getId(name);
         int memSize = memory.size();
         int start = -1;
         int count = 0;
         int scanned = 0;
-
         int i = pointer;
 
         while (scanned < memSize) {
@@ -28,7 +40,7 @@ public:
                         memory[j % memSize] = id;
                     }
                     pointer = (start + size) % memSize;
-                    cout << "Processo " << id << " alocado a partir da posicao " << start << endl;
+                    cout << "Processo " << name << " alocado a partir da posicao " << start << endl;
                     return;
                 }
             } else {
@@ -39,20 +51,32 @@ public:
             scanned++;
         }
 
-        cout << "Não há espaço suficiente para o processo " << id << endl;
+        cout << "Nao ha espaco suficiente para o processo " << name << endl;
     }
-    void removeMemory(int id) {
 
+    void removeMemory(string name) {
+        if (!nameToId.count(name)) {
+            cout << "Processo " << name << " nao encontrado na memoria." << endl;
+            return;
+        }
+        int id = nameToId[name];
         for (int i = 0; i < memory.size(); i++) {
             if (memory[i] == id) {
                 memory[i] = 0;
             }
         }
-
+        cout << "Processo " << name << " removido da memoria." << endl;
+        nameToId.erase(name);
+        idToName.erase(id);
     }
+
     void printMemory() {
         for (int i = 0; i < memory.size(); i++) {
-            cout << memory[i] << " ";
+            if (memory[i] == 0) {
+                cout << ". ";
+            } else {
+                cout << idToName[memory[i]] << " ";
+            }
         }
         cout << endl;
     }

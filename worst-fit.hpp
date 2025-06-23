@@ -1,18 +1,29 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 class WorstFit {
 private:
     vector<int> memory;
+    int nextId = 1;
+    map<string, int> nameToId;
+    map<int, string> idToName;
 
+    int getId(string name) {
+        if (nameToId.count(name)) return nameToId[name];
+        nameToId[name] = nextId;
+        idToName[nextId] = name;
+        return nextId++;
+    }
 public:
     WorstFit(int size) {
         memory = vector<int>(size, 0);
     }
 
-    void addMemory(int id, int size) {
+    void addMemory(string name, int size) {
+        int id = getId(name);
         int maxBlockStart = -1;
         int maxBlockSize = 0;
 
@@ -42,21 +53,32 @@ public:
             for (int j = maxBlockStart; j < maxBlockStart + size; j++) {
                 memory[j] = id;
             }
-            cout << "Processo " << id << " alocado a partir da posicao " << maxBlockStart << endl;
+            cout << "Processo " << name << " alocado a partir da posicao " << maxBlockStart << endl;
         }
     }
-    void removeMemory(int id) {
-
+    void removeMemory(string name) {
+        if (!nameToId.count(name)) {
+            cout << "Processo " << name << " nao encontrado na memoria." << endl;
+            return;
+        }
+        int id = nameToId[name];
         for (int i = 0; i < memory.size(); i++) {
             if (memory[i] == id) {
                 memory[i] = 0;
             }
         }
-
+        cout << "Processo " << name << " removido da memoria." << endl;
+        nameToId.erase(name);
+        idToName.erase(id);
     }
+
     void printMemory() {
         for (int i = 0; i < memory.size(); i++) {
-            cout << memory[i] << " ";
+            if (memory[i] == 0) {
+                cout << ". ";
+            } else {
+                cout << idToName[memory[i]] << " ";
+            }
         }
         cout << endl;
     }
