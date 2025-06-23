@@ -3,6 +3,32 @@ using namespace std;
 #include "worst-fit.hpp"
 #include "circular-fit.hpp"
 
+int safe_input_int(const string& prompt)
+{
+    int value;
+    while (true)
+    {
+        cout << prompt;
+        cin >> value;
+
+        if (cin.fail()) 
+        {
+            cin.clear(); // limpa o estado de erro
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cout << "Entrada inválida. Digite um número inteiro.\n";
+        }
+        else
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+    }
+}
+
+
+bool check_number(int target, int main_size){
+    return (target > 0 && target <= main_size);
+}
 int menu()
 {
     int c;
@@ -57,10 +83,12 @@ int main()
                 case 1:
                 {
 
-                    int size;
                     string process_name;
-                    cout << "Enter size to allocate (Bytes): ";
-                    cin >> size;
+                    int size = safe_input_int("Enter size to allocate (Bytes): ");
+                    while (!check_number(size, main_size)){
+                        cout << "Invalid size. Try again." << endl;
+                        size = safe_input_int("Enter size to allocate (Bytes): ");
+                    }
                     cout << "Enter process name: ";
                     cin >> process_name;
                     b.in(process_name, size);
@@ -87,7 +115,6 @@ int main()
                 cb = menu_buddy("Buddy");
             }
             cout << "Returning to main menu." << endl;
-            b.~buddy();
             cout << "Buddy memory management exited." << endl;
             break;
         }
@@ -103,12 +130,12 @@ int main()
                 case 1:
                 {
 
-                    int size;
-                    int process_name;
-                    cout << "Enter size to allocate (Bytes): ";
-                    cin >> size;
-                    cout << "Enter process name: ";
-                    cin >> process_name;
+                    int size = safe_input_int("Enter size to allocate (Bytes): ");
+                    while (!check_number(size, main_size)){
+                        cout << "Invalid size. Try again." << endl;
+                        size = safe_input_int("Enter size to allocate (Bytes): ");
+                    }
+                    int process_name = safe_input_int("Enter process name: ");
                     b.addMemory(process_name, size);
                     break;
                 }
@@ -148,12 +175,12 @@ int main()
                 case 1:
                 {
 
-                    int size;
-                    int process_name;
-                    cout << "Enter size to allocate (Bytes): ";
-                    cin >> size;
-                    cout << "Enter process name: ";
-                    cin >> process_name;
+                    int size = safe_input_int("Enter size to allocate (Bytes): ");
+                    while (!check_number(size, main_size)){
+                        cout << "Invalid size. Try again." << endl;
+                        size = safe_input_int("Enter size to allocate (Bytes): ");
+                    }
+                    int process_name = safe_input_int("Enter process name: ");
                     b.addMemory(process_name, size);
                     break;
                 }

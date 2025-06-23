@@ -110,8 +110,12 @@ private:
     {
         if (node == nullptr)
             return;
-        destroy_tree(node->left);
-        destroy_tree(node->right);
+
+        if (node->left)
+            destroy_tree(node->left);
+        if (node->right)
+            destroy_tree(node->right);
+
         delete node;
     }
     Block *find_process(Block *node, const string &name)
@@ -129,7 +133,6 @@ private:
         return find_process(node->right, name);
     }
 
-    // ⬇️ Tenta fundir blocos irmãos (recursivo)
     void try_merge(Block *node)
     {
         if (!node || !node->parent)
