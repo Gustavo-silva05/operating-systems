@@ -1,8 +1,8 @@
 # Sistemas Operacionais – Trabalho Prático 2
-Gerenciamento de Memória
+## Gerenciamento de Memória
 O presente trabalho tem por objetivo explorar as abordagens de alocação de espaço contíguo para
 processos, e explorar as diferentes técnicas e políticas de alocação de espaços em uma memória.
-Estratégias de alocação
+## Estratégias de alocação
 A ferramenta deverá permitir a exploração de (i) partições variáveis ou (ii) partições definidas com o
 sistema buddy. Comum a todos os métodos deverá ser a informação do tamanho da memória principal a ser
 empregada, que define o tamanho total inicial disponível para alocação. Deverá ser assumido um tamanho
@@ -14,7 +14,7 @@ nada além da requisição de alocação de memória e liberação de memória d
 No escopo deste trabalho, o tratamento de alocações de processos que venham a ultrapassar a
 quantidade de espaço disponível na memória principal, deverá se dar a partir da notificação de “ESPAÇO
 INSUFICIENTE DE MEMÓRIA”.
-Sistema Buddy
+## Sistema Buddy
 O sistema buddy aloca memória a partir de um segmento de tamanho fixo que consiste em páginas
 fisicamente contíguas. A memória é alocada nesse segmento usando um alocador que atende às solicitações
 em unidades dimensionadas como potência de 2 (4 KB, 8 KB, 16 KB e assim por diante). Uma solicitação em
@@ -41,16 +41,16 @@ deste (“ID) deverão ser informados. Um exemplo de arquivo contendo a sequênc
 é apresentado abaixo.
 Tabela 1 – Tabela descritiva da sequência de alocação e liberação de espaços da memória
 Arquivo Significado
-IN(A, 10) Requisita a alocação de 10 espaços para o processo A
-IN(B, 15) Requisita a alocação de 15 espaços para o processo B
-IN(C, 23) Requisita a alocação de 23 espaços para o processo C
-OUT(A) Libera o espaço alocado pelo processo A
-OUT(B) Libera o espaço alocado pelo processo B
-IN(D, 13) Requisita a alocação de 13 espaços para o processo D
-OUT(C) Libera o espaço alocado pelo processo C
-IN(E,32) Requisita a alocação de 32 espaços para o processo E
-OUT(E) Libera o espaço alocado pelo processo E
-OUT(D) Libera o espaço alocado pelo processo D
+IN(A, 10)     Requisita a alocação de 10 espaços para o processo A
+IN(B, 15)     Requisita a alocação de 15 espaços para o processo B
+IN(C, 23)     Requisita a alocação de 23 espaços para o processo C
+OUT(A)       Libera o espaço alocado pelo processo A
+OUT(B)      Libera o espaço alocado pelo processo B
+IN(D, 13)   Requisita a alocação de 13 espaços para o processo D
+OUT(C)      Libera o espaço alocado pelo processo C
+IN(E,32)    Requisita a alocação de 32 espaços para o processo E
+OUT(E)      Libera o espaço alocado pelo processo E
+OUT(D)      Libera o espaço alocado pelo processo D
 Visualização de resultados
 Da escolha da estratégia de alocação para o tipo de particionamento escolhido e do arquivo com a
 descrição das sequências de requisições, deverá ser possível visualizar os espaços livres para alocação. A
